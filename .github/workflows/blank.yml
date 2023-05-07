@@ -52,10 +52,8 @@ jobs:
         with:
           path: upload
           
-      - name: 将存储库签出到运行器
-        uses: actions/checkout@v3
-        with:
-          path: backup
+      - name: 备份
+        run: cp -RT upload backup
           
       - name: 克隆源代码
         working-directory:  ${{ env.DOWNLOAD_ROOT_PATH }}
