@@ -1,4 +1,5 @@
-name: Build OpenWrt-K
+name: Make OpenWrt-package
+
 on:
   schedule:
     - cron: '0 3 * * *'
@@ -126,6 +127,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-transmission $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-zerotier $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/Lienol/openwrt-package/luci-app-fileassistant $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/Lienol/openwrt-package/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/luci-app-passwall $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall/* $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall2/luci-app-passwall2 $CMZJ_PACKAGE_ROOT_PATH/
@@ -173,19 +175,13 @@ jobs:
         
       - name: test
         run: |
-          ls -la $CMZJ_PACKAGE_ROOT_PATH/**
-          echo 0
           rm -rf upload/*
+          #cp -r backup/luci-app-socat upload
           cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
-          ls backup
-          echo 1
-          ls $CMZJ_PACKAGE_ROOT_PATH
-          echo 2
-          ls -a upload
           cd upload
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "test2"
+          git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
           git push
           
