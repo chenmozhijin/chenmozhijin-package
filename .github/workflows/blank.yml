@@ -173,7 +173,7 @@ jobs:
           sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
         
-      - name: test
+      - name: upload
         run: |
           rm -rf upload/*
           cp -r backup/luci-app-socat upload
