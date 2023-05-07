@@ -154,10 +154,10 @@ jobs:
           sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
-      - name: 修改luci-app-netdata
+      - name: 删除.git
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
         run: |
-          rm -rf ./*/.git
+          find . -name ".git" | xargs rm -Rf
         
       - name: test
         run: |
