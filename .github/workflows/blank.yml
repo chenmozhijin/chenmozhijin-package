@@ -24,12 +24,12 @@ jobs:
     steps:
       - name: 准备环境
         run:  |
-          sudo -E apt update backup
+          sudo -E apt update
           sudo apt install -y curl git  rsync unzip wget sed tar
                
       - name: 建立工作文件夹
         run:  |
-          mkdir -p workspace upload
+          mkdir -p workspace upload backup
           cd workspace
           export WORKSPACE_ROOT_PATH="$(pwd)"
           echo "WORKSPACE_ROOT_PATH=$WORKSPACE_ROOT_PATH" >> $GITHUB_ENV
