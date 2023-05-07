@@ -176,7 +176,7 @@ jobs:
           ls -la $CMZJ_PACKAGE_ROOT_PATH/**
           echo 0
           rm -rf upload/*
-          #cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
+          cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
           ls backup
           echo 1
           ls $CMZJ_PACKAGE_ROOT_PATH
