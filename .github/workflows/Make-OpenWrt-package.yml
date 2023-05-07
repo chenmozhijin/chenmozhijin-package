@@ -172,8 +172,13 @@ jobs:
           sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
+          
+      - name: 删除README.md
+        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+        run: |
+          rm -rf */README.md
         
-      - name: upload
+      - name: 上传
         run: |
           rm -rf upload/*
           cp -r backup/luci-app-socat upload
