@@ -1,0 +1,156 @@
+name: Build OpenWrt-K
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/**'
+      - '!README.md'
+  pull_request:
+            branches:
+              - main
+            paths:
+              - '.github/**'
+              - '!README.md'
+  workflow_dispatch:
+permissions:
+  contents: write
+  discussions: write
+jobs:
+  prepare:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 准备环境
+        run:  |
+          sudo -E apt update backup
+          sudo apt install -y curl git  rsync unzip wget sed tar
+               
+      - name: 建立工作文件夹
+        run:  |
+          mkdir -p workspace upload
+          cd workspace
+          export WORKSPACE_ROOT_PATH="$(pwd)"
+          echo "WORKSPACE_ROOT_PATH=$WORKSPACE_ROOT_PATH" >> $GITHUB_ENV
+          cd $WORKSPACE_ROOT_PATH
+          mkdir -p download
+          cd download
+          export DOWNLOAD_ROOT_PATH="$(pwd)"
+          echo "DOWNLOAD_ROOT_PATH=$DOWNLOAD_ROOT_PATH" >> $GITHUB_ENV
+          mkdir -p lede Lienol immortalwrt wongsyrone passwall turboacc other
+          cd $WORKSPACE_ROOT_PATH
+          mkdir -p cmzj_package
+          cd cmzj_package
+          export CMZJ_PACKAGE_ROOT_PATH="$(pwd)"
+          echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
+          mkdir -p turboacc
+          cd $GITHUB_WORKSPACE
+
+      - name: 将存储库签出到运行器
+        uses: actions/checkout@v3
+        with:
+          path: upload backup
+          
+      - name: 克隆源代码
+        working-directory:  ${{ env.DOWNLOAD_ROOT_PATH }}
+        run:  |
+          cd lede
+          git clone https://github.com/coolsnowwolf/lede
+          git clone https://github.com/coolsnowwolf/luci
+          git clone https://github.com/coolsnowwolf/packages 
+          cd $DOWNLOAD_ROOT_PATH        
+          cd Lienol
+          git clone https://github.com/Lienol/openwrt-package
+          cd $DOWNLOAD_ROOT_PATH
+          cd immortalwrt
+          git clone https://github.com/immortalwrt/luci
+          cd $DOWNLOAD_ROOT_PATH
+          cd passwall
+          git clone https://github.com/xiaorouji/openwrt-passwall -b luci
+          mv ./openwrt-passwall/luci-app-passwall ./luci-app-passwall
+          rm -rf openwrt-passwall
+          git clone https://github.com/xiaorouji/openwrt-passwall
+          git clone https://github.com/xiaorouji/openwrt-passwall2
+          cd $DOWNLOAD_ROOT_PATH
+          cd other
+          git clone https://github.com/rufengsuixing/luci-app-adguardhome
+          git clone https://github.com/jerrykuku/luci-app-argon-config
+          git clone https://github.com/csrutil/OpenWrt-NIC-Drivers
+          git clone https://github.com/lisaac/luci-app-diskman
+          git clone https://github.com/sirpdboy/luci-app-netdata
+          git clone https://github.com/sirpdboy/NetSpeedTest
+          git clone https://github.com/tty228/luci-app-serverchan
+          git clone https://github.com/jerrykuku/luci-theme-argon
+          
+      - name: 复制到cmzj_package
+        run: |
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-baidupcs-web $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-usb-printer $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-qbittorrent $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-vlmcsd $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-webadmin $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/luci/applications/luci-app-cifs-mount $CMZJ_PACKAGE_ROOT_PATH/         
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/net/vlmcsd $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/net/baidupcs-web $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/net/qBittorrent $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/net/qBittorrent-static $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/libs/rblibtorrent $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/libs/qtbase $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/packages/libs/qttools $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ipv6-helper $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_aliyun $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_dnspod $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8168 $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-syncdial $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-rclone $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-transmission $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-zerotier $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/Lienol/openwrt-package/luci-app-fileassistant $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/passwall/luci-app-passwall $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall2 $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/* $CMZJ_PACKAGE_ROOT_PATH/
+          cd $CMZJ_PACKAGE_ROOT_PATH && ls
+          
+      - name: 修改Makefile文件
+        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+        run: |
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-vlmcsd/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-webadmin/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-zerotier/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-cifs-mount/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-baidupcs-web/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-rclone/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-syncdial/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-usb-printer/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-transmission/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-qbittorrent/Makefile
+          
+      - name: 创建软连接以修复中文支持
+        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+        run: |
+          ln -s zh-cn ./luci-app-webadmin/po/zh_Hans
+          ln -s zh-cn ./luci-app-netdata/po/zh_Hans
+          ln -s zh-cn ./luci-app-vlmcsd/po/zh_Hans
+          ln -s zh-cn ./luci-app-usb-printer/po/zh_Hans
+          ln -s zh-cn ./luci-app-qbittorrent/po/zh_Hans
+          rm -rf ./NetSpeedTest/luci-app-netspeedtest/po/zh_Hans
+          ln -s zh-cn ./NetSpeedTest/luci-app-netspeedtest/po/zh_Hans
+          
+      - name: 修改luci-app-netdata
+        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+        run: |
+          sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
+          sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
+          sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
+          
+      - name: 修改luci-app-netdata
+        run: |
+          ls backup
+          echo 1
+          ls $CMZJ_PACKAGE_ROOT_PATH
+          echo 2
+          ls upload
+          
+          
