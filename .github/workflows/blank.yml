@@ -164,5 +164,10 @@ jobs:
           ls $CMZJ_PACKAGE_ROOT_PATH
           echo 2
           ls -a upload
-          
+          cd upload
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "test"
+          git push
           
