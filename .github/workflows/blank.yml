@@ -157,11 +157,12 @@ jobs:
           
       - name: test
         run: |
+          rm -rf upload/*
           cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
           ls backup
           echo 1
           ls $CMZJ_PACKAGE_ROOT_PATH
           echo 2
-          ls upload
+          ls -a upload
           
           
