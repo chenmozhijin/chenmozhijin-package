@@ -113,7 +113,14 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/passwall/luci-app-passwall $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall2 $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/other/* $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-adguardhome $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-argon-config $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-diskman $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-netdata $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/luci-app-netspeedtest $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-serverchan $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-theme-argon $CMZJ_PACKAGE_ROOT_PATH/
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
@@ -138,8 +145,8 @@ jobs:
           ln -s zh-cn ./luci-app-vlmcsd/po/zh_Hans
           ln -s zh-cn ./luci-app-usb-printer/po/zh_Hans
           ln -s zh-cn ./luci-app-qbittorrent/po/zh_Hans
-          rm -rf ./NetSpeedTest/luci-app-netspeedtest/po/zh_Hans
-          ln -s zh-cn ./NetSpeedTest/luci-app-netspeedtest/po/zh_Hans
+          rm -rf ./luci-app-netspeedtest/po/zh_Hans
+          ln -s zh-cn ./luci-app-netspeedtest/po/zh_Hans
           
       - name: 修改luci-app-netdata
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
@@ -150,6 +157,7 @@ jobs:
           
       - name: test
         run: |
+          cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
           ls backup
           echo 1
           ls $CMZJ_PACKAGE_ROOT_PATH
