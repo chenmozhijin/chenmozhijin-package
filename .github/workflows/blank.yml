@@ -20,7 +20,7 @@ permissions:
   contents: write
   discussions: write
 jobs:
-  prepare:
+  Make:
     runs-on: ubuntu-22.04
     steps:
       - name: 准备环境
