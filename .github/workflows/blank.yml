@@ -50,7 +50,12 @@ jobs:
       - name: 将存储库签出到运行器
         uses: actions/checkout@v3
         with:
-          path: upload backup
+          path: upload
+          
+      - name: 将存储库签出到运行器
+        uses: actions/checkout@v3
+        with:
+          path: backup
           
       - name: 克隆源代码
         working-directory:  ${{ env.DOWNLOAD_ROOT_PATH }}
@@ -145,7 +150,7 @@ jobs:
           sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
           sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
           
-      - name: 修改luci-app-netdata
+      - name: test
         run: |
           ls backup
           echo 1
