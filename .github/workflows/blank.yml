@@ -157,7 +157,7 @@ jobs:
       - name: 删除.git
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
         run: |
-          find . -name ".git" | xargs rm -Rf
+          find ./* -name ".git" | xargs rm -Rf
         
       - name: test
         run: |
