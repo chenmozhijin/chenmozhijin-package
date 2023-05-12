@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: upload
-          repository: 'chenmozhijin/openwrt-package'
+          repository: 'chenmozhijin/chenmozhijin-package'
           
       - name: 备份
         run: cp -RT upload backup
