@@ -51,6 +51,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: upload
+          repository: 'chenmozhijin/openwrt-package'
           
       - name: 备份
         run: cp -RT upload backup
@@ -195,4 +196,3 @@ jobs:
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
           git push ||echo "No updateable"
-          echo ${{ github.repository }}
