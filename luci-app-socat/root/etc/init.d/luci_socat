@@ -7,7 +7,7 @@ CONFIG=socat
 CONFIG_PATH=/var/etc/$CONFIG
 
 add_rule() {
-	accept_port=$(cat /var/etc/$CONFIG.port | tr "\n" " ")
+	accept_port=$(cat /var/etc/$CONFIG.port | tr "\n" " ") || echo "not open firewall ports"
 	if [ "$accept_port" ]; then
 		uci -q delete firewall.socat
 		uci set firewall.socat=rule
