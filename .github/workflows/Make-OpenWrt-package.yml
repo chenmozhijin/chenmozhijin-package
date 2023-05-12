@@ -189,6 +189,7 @@ jobs:
         run: |
           rm -rf upload/*
           cp -r backup/luci-app-socat upload
+          cp backup/README.md upload
           cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
           cd upload
           git config user.name github-actions
