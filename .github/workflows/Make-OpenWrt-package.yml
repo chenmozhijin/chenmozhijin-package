@@ -39,13 +39,12 @@ jobs:
           cd download
           export DOWNLOAD_ROOT_PATH="$(pwd)"
           echo "DOWNLOAD_ROOT_PATH=$DOWNLOAD_ROOT_PATH" >> $GITHUB_ENV
-          mkdir -p lede Lienol immortalwrt wongsyrone passwall turboacc other
+          mkdir -p lede Lienol immortalwrt wongsyrone passwall other
           cd $WORKSPACE_ROOT_PATH
           mkdir -p cmzj_package
           cd cmzj_package
           export CMZJ_PACKAGE_ROOT_PATH="$(pwd)"
           echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
-          mkdir -p turboacc
           cd $GITHUB_WORKSPACE
 
       - name: 将存储库签出到运行器
@@ -102,6 +101,10 @@ jobs:
           rm -rf luci-app-serverchan/.git
           git clone https://github.com/jerrykuku/luci-theme-argon
           rm -rf luci-theme-argon/.git
+          git clone https://github.com/fullcone-nat-nftables/nft-fullcone
+          rm -rf nft-fullcone/.git
+          git clone https://github.com/chenmozhijin/turboacc
+          rm -rf turboacc/.git
           
       - name: 复制到cmzj_package
         run: |
@@ -139,6 +142,8 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/luci-app-netspeedtest $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-serverchan $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-theme-argon $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/nft-fullcone $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
@@ -189,5 +194,5 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-          git push
-          
+          git push ||echo "No updateable"
+          echo ${{ github.repository }}
