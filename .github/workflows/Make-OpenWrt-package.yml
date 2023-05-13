@@ -106,6 +106,8 @@ jobs:
           rm -rf nft-fullcone/.git
           git clone https://github.com/chenmozhijin/turboacc
           rm -rf turboacc/.git
+          git clone https://github.com/chenmozhijin/luci-app-socat
+          rm -rf luci-app-socat/.git
           
       - name: 复制到cmzj_package
         run: |
@@ -131,7 +133,6 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-transmission $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-zerotier $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/Lienol/openwrt-package/luci-app-fileassistant $CMZJ_PACKAGE_ROOT_PATH/
-          #cp -r $DOWNLOAD_ROOT_PATH/Lienol/openwrt-package/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/luci-app-passwall $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall/* $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall2/luci-app-passwall2 $CMZJ_PACKAGE_ROOT_PATH/
@@ -145,6 +146,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-theme-argon $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/nft-fullcone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-socat/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
@@ -188,7 +190,6 @@ jobs:
       - name: 上传
         run: |
           rm -rf upload/*
-          cp -r backup/luci-app-socat upload
           cp backup/README.md upload
           cp -RT $CMZJ_PACKAGE_ROOT_PATH upload
           cd upload
