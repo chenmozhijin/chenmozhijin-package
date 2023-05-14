@@ -127,7 +127,8 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_aliyun $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_dnspod $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8168 $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-syncdial $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/shortcut-fe $CMZJ_PACKAGE_ROOT_PATH/turboacc/
+          #cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-syncdial $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-rclone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-transmission $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-zerotier $CMZJ_PACKAGE_ROOT_PATH/
@@ -172,12 +173,12 @@ jobs:
           rm -rf ./luci-app-netspeedtest/po/zh_Hans
           ln -s zh-cn ./luci-app-netspeedtest/po/zh_Hans
           
-      - name: 修改luci-app-netdata
-        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
-        run: |
-          sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
-          sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
-          sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
+#      - name: 修改luci-app-netdata
+#        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+#        run: |
+#          sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
+#          sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
+#          sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
           
       - name: 删除.md .github
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
