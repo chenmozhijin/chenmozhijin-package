@@ -202,13 +202,15 @@ jobs:
           
           
   job1:
-    if: ${{ jobs.Make.outputs.compile }} == 'true'
+    needs: Make
+    if: ${{ needs.Make.outputs.compile }} == 'true'
     runs-on: ubuntu-latest
     steps:
       - run: echo 1
 
   job2:
-    if: ${{ jobs.Make.outputs.compile }} == 'false'
+    needs: Make
+    if: ${{ needs.Make.outputs.compile }} == 'false'
     runs-on: ubuntu-latest
     steps:
       - run: echo 0
