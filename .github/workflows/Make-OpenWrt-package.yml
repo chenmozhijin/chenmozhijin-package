@@ -201,17 +201,17 @@ jobs:
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "compile=false" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
-          echo pakcages=$(ls | sed '/README.md/d' |sed ":a;N;s/\n/,/g;ba") >> "$GITHUB_OUTPUT"
+          echo pakcages=[$(ls | sed '/README.md/d' |sed ":a;N;s/\n/,/g;ba")] >> "$GITHUB_OUTPUT"
 
   build:
     needs: Make
     if: ${{ needs.Make.outputs.compile == 'true' }}
     runs-on: ubuntu-latest
-    max-parallel: 8
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
-        pakcages: [${{ needs.Make.outputs.pakcages }}]
+        pakcages: ${{ needs.Make.outputs.pakcages }}
     steps:
       - name: 清理空间
         run:  |
