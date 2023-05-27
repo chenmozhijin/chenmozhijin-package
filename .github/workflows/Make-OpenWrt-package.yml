@@ -294,3 +294,5 @@ jobs:
     steps:
       - run: echo "No updateable"
       - run: echo ${{ needs.Make.outputs.pakcages }}
+      - run: echo ${{ needs.Make.outputs.compile  }} 
+      - run: echo ${{ inputs.compile }}
