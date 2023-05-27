@@ -207,6 +207,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 1
+      - run: echo ${{ needs.Make.outputs.compile }}
 
   job2:
     needs: Make
@@ -214,3 +215,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 0
+      - run: echo ${{ needs.Make.outputs.compile }}
