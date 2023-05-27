@@ -23,6 +23,7 @@ jobs:
   Make:
     outputs:
       compile: ${{ steps.upload.outputs.compile }}
+      pakcages: ${{ steps.upload.outputs.pakcages }}
     runs-on: ubuntu-22.04
     steps:
       - name: 准备环境
@@ -200,20 +201,89 @@ jobs:
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "compile=false" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
-          
-          
-  job1:
+          echo pakcages=$(ls | sed '/README.md/d' |sed ":a;N;s/\n/,/g;ba") >> "$GITHUB_OUTPUT"
+
+  build:
     needs: Make
     if: ${{ needs.Make.outputs.compile == 'true' }}
     runs-on: ubuntu-latest
+    max-parallel: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        pakcages: [${{ needs.Make.outputs.pakcages }}]
     steps:
-      - run: echo 1
-      - run: echo ${{ needs.Make.outputs.compile }}
+      - name: 清理空间
+        run:  |
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /etc/mysql /etc/php
+          sudo -E apt-mark hold grub-efi-amd64-signed
+          sudo -E apt update
+          sudo -E apt -y purge azure-cli* docker* ghc* zulu* llvm* firefox google* dotnet* powershell* openjdk* mysql* php* mongodb* dotnet* moby* snap*
 
-  job2:
+      - name: 安装编译依赖
+        run: |
+          sudo -E apt-mark hold grub-efi-amd64-signed
+          sudo -E apt update
+          sudo -E apt -y full-upgrade
+          sudo apt install -y ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pip libpython3-dev qemu-utils clang g++ python3-distutils rsync unzip zlib1g-dev wget
+          sudo -E systemctl daemon-reload 
+          sudo -E apt -y autoremove --purge
+          sudo -E apt clean
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+      - name: 下载SDK
+        run: |
+          url=https://downloads.openwrt.org/releases/22.03.5/targets/x86/64/openwrt-sdk-22.03.5-x86-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz
+          wget -O openwrt.tar.xz $url
+          tar xvf openwrt.tar.xz
+          mv $(basename $url | awk -F '.tar.xz' '{ print $1 }') openwrt
+          cd openwrt
+          export OPENWRT_ROOT_PATH="$(pwd)"
+          echo "OPENWRT_ROOT_PATH=$OPENWRT_ROOT_PATH" >> $GITHUB_ENV
+
+      - name: 将存储库签出到运行器
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package
+
+      - name: 更新 feeds 
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          
+
+      - name: 加载自定义配置并生成配置文件
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          echo "CONFIG_TARGET_x86=y" >> $OPENWRT_ROOT_PATH/.config
+          echo "CONFIG_TARGET_x86_64=y" >> $OPENWRT_ROOT_PATH/.config
+          echo "CONFIG_TARGET_x86_64_DEVICE_generic=y" >> $OPENWRT_ROOT_PATH/.config
+          echo CONFIG_PACKAGE_${{ matrix.pakcages }} > .config
+          cat ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package/.config/luci-app-turboacc >> $OPENWRT_ROOT_PATH/.config && echo load extra configuration || echo No extra configuration loaded
+          make defconfig
+          ./scripts/diffconfig.sh
+
+      - name: 编译
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          make package/chenmozhijin-package/${{ matrix.pakcages }}/compile -j$(nproc) || make package/chenmozhijin-package/${{ matrix.pakcages }}/compile -j1 V=sc
+
+      - name: 准备 artifact
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          mkdir -p ./artifact
+          cp -rf $(find ./bin/packages/ -type f -name "${{ matrix.pakcages }}*.ipk") ./artifact
+
+      - name: 上传build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.pakcages }}
+          path: ${{ github.workspace }}/artifact/**
+
+  No_updateable:
     needs: Make
     if: ${{ needs.Make.outputs.compile == 'false' }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo 0
-      - run: echo ${{ needs.Make.outputs.compile }}
+      - run: echo "No updateable"
