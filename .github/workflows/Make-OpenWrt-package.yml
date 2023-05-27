@@ -265,7 +265,7 @@ jobs:
           echo "CONFIG_TARGET_x86=y" >> $OPENWRT_ROOT_PATH/.config
           echo "CONFIG_TARGET_x86_64=y" >> $OPENWRT_ROOT_PATH/.config
           echo "CONFIG_TARGET_x86_64_DEVICE_generic=y" >> $OPENWRT_ROOT_PATH/.config
-          echo CONFIG_PACKAGE_${{ matrix.pakcages }} > .config
+          echo CONFIG_PACKAGE_${{ matrix.pakcages }}=m > .config
           cat ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package/.config/${{ matrix.pakcages }} >> $OPENWRT_ROOT_PATH/.config && echo load extra configuration || echo No extra configuration loaded
           make defconfig
           ./scripts/diffconfig.sh
