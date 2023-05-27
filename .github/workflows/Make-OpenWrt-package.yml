@@ -21,6 +21,8 @@ permissions:
   discussions: write
 jobs:
   Make:
+    outputs:
+      compile: ${{ steps.upload.outputs.compile }}
     runs-on: ubuntu-22.04
     steps:
       - name: 准备环境
@@ -187,6 +189,7 @@ jobs:
           rm -rf */.github
         
       - name: 上传
+        id: upload
         run: |
           rm -rf upload/*
           cp backup/README.md upload
@@ -195,5 +198,17 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push ||echo "No updateable"
+          git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "No updateable" &&  echo "compile=false" >> "$GITHUB_OUTPUT"
+          
+          
+  job1:
+    if: jobs.Make.outputs.compile == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 1
 
+  job2:
+    if: jobs.Make.outputs.compile == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 0
