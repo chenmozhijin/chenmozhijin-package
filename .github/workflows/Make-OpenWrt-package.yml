@@ -293,3 +293,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "No updateable"
+      - run: echo ${{ needs.Make.outputs.pakcages }}
