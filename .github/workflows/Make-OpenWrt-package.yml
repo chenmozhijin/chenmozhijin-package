@@ -203,7 +203,7 @@ jobs:
           
   job1:
     needs: Make
-    if: ${{ needs.Make.outputs.compile }} == 'true'
+    if: ${{ needs.Make.outputs.compile == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - run: echo 1
@@ -211,7 +211,7 @@ jobs:
 
   job2:
     needs: Make
-    if: ${{ needs.Make.outputs.compile }} == 'false'
+    if: ${{ needs.Make.outputs.compile == 'false' }}
     runs-on: ubuntu-latest
     steps:
       - run: echo 0
