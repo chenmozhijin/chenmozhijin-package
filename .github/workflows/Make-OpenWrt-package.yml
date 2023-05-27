@@ -199,6 +199,7 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "No updateable" &&  echo "compile=false" >> "$GITHUB_OUTPUT"
+          cat $GITHUB_OUTPUT
           
           
   job1:
