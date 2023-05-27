@@ -200,7 +200,6 @@ jobs:
           git add .
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "compile=false" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
-          [  "$(cat $GITHUB_OUTPUT)" = "false" ] && echo "No updateable"
           
           
   job1:
