@@ -16,6 +16,12 @@ on:
               - '.github/**'
               - '!README.md'
   workflow_dispatch:
+    inputs:
+      compile:
+        description: 'compile'
+        required: false
+        type: boolean
+    
 permissions:
   contents: write
   discussions: write
@@ -205,7 +211,7 @@ jobs:
 
   build:
     needs: Make
-    if: ${{ needs.Make.outputs.compile == 'true' }}
+    if: ${{ needs.Make.outputs.compile == 'true' }} || ${{ inputs.compile == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
