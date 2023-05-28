@@ -211,7 +211,7 @@ jobs:
 
   build:
     needs: Make
-    if: ${{ needs.Make.outputs.compile == 'true' }} || ${{ inputs.compile == 'true' }}
+    if:  needs.Make.outputs.compile == 'true' ||  inputs.compile == 'true' 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
