@@ -135,7 +135,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_aliyun $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_dnspod $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8168 $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/shortcut-fe $CMZJ_PACKAGE_ROOT_PATH/turboacc/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/shortcut-fe $CMZJ_PACKAGE_ROOT_PATH/
           #cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-syncdial $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-rclone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-zerotier $CMZJ_PACKAGE_ROOT_PATH/
@@ -279,13 +279,13 @@ jobs:
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: |
           mkdir -p ./artifact
-          cp -rf $(find ./bin/packages/ -type f -name "${{ matrix.pakcages }}*.ipk") ./artifact
+          cp -rf $(find ./bin/packages/ -type f -name "${{ matrix.pakcages }}*.ipk") ./artifact || cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact 
 
       - name: 上传build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.pakcages }}
-          path: ${{ github.workspace }}/artifact/**
+          path: ${{ github.workspace }}/artifact/*
 
   No_updateable:
     needs: Make
