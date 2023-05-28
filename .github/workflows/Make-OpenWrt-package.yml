@@ -285,7 +285,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.pakcages }}
-          path: ${{ github.workspace }}/artifact/*
+          path: ${{ env.OPENWRT_ROOT_PATH }}/artifact/*
 
   No_updateable:
     needs: Make
