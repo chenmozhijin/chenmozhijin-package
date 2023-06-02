@@ -54,6 +54,7 @@ jobs:
           cd cmzj_package
           export CMZJ_PACKAGE_ROOT_PATH="$(pwd)"
           echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
+          mkdir -p Parted
           cd $GITHUB_WORKSPACE
 
       - name: 将存储库签出到运行器
@@ -147,7 +148,8 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-adguardhome $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-argon-config $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/* $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-diskman $CMZJ_PACKAGE_ROOT_PATH/
+          cp $DOWNLOAD_ROOT_PATH/other/luci-app-diskman/Parted.Makefile $CMZJ_PACKAGE_ROOT_PATH/Parted/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-diskman/applications/luci-app-diskman $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/luci-app-netspeedtest $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/homebox $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-wechatpush $CMZJ_PACKAGE_ROOT_PATH/
@@ -208,24 +210,11 @@ jobs:
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "compile=false" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
           echo pakcages=[$(ls | sed '/README.md/d' |sed ":a;N;s/\n/,/g;ba")] >> "$GITHUB_OUTPUT"
-
-  build:
+  prepare:
     needs: Make
     if:  needs.Make.outputs.compile == 'true' ||  inputs.compile == 'true' 
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 8
-      matrix:
-        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,homebox,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,turboacc,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+    runs-on: ubuntu-22.04
     steps:
-      - name: 清理空间
-        run:  |
-          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /etc/mysql /etc/php
-          sudo -E apt-mark hold grub-efi-amd64-signed
-          sudo -E apt update
-          sudo -E apt -y purge azure-cli* docker* ghc* zulu* llvm* firefox google* dotnet* powershell* openjdk* mysql* php* mongodb* dotnet* moby* snap*
-
       - name: 安装编译依赖
         run: |
           sudo -E apt-mark hold grub-efi-amd64-signed
@@ -246,18 +235,12 @@ jobs:
           cd openwrt
           export OPENWRT_ROOT_PATH="$(pwd)"
           echo "OPENWRT_ROOT_PATH=$OPENWRT_ROOT_PATH" >> $GITHUB_ENV
+          cd $GITHUB_WORKSPACE && cat $GITHUB_ENV >> prepare_ENV
 
       - name: 将存储库签出到运行器
         uses: actions/checkout@v3
         with:
           path: ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package
-
-      - name: 更新 feeds 
-        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
-        run: |
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-          
 
       - name: 加载自定义配置并生成配置文件
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
@@ -265,6 +248,72 @@ jobs:
           echo "CONFIG_TARGET_x86=y" >> $OPENWRT_ROOT_PATH/.config
           echo "CONFIG_TARGET_x86_64=y" >> $OPENWRT_ROOT_PATH/.config
           echo "CONFIG_TARGET_x86_64_DEVICE_generic=y" >> $OPENWRT_ROOT_PATH/.config
+          echo CONFIG_PACKAGE_luci-base=m > .config
+          echo CONFIG_PACKAGE_golang=m > .config
+          make defconfig
+          ./scripts/diffconfig.sh
+
+      - name: 更新 feeds 
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: 编译依赖
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          make package/feeds/luci/luci-base/compile -j$(nproc)
+          make package/feeds/packages/lang/golang/golang/compile -j$(nproc)
+
+      - name: 准备上传
+        run:  |
+          cd $GITHUB_WORKSPACE
+          sudo tar cvpzf /prepare_WORKSPACE.tgz *
+          ls
+
+      - name: 上传 prepare_WORKSPACE
+        uses: actions/upload-artifact@v3
+        with:
+          name: prepare_WORKSPACE
+          path: /prepare_WORKSPACE.tgz
+          
+  build:
+    needs: prepare
+    if:  needs.Make.outputs.compile == 'true' ||  inputs.compile == 'true' 
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,homebox,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,Parted,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+    steps:
+      - name: 安装编译依赖
+        run: |
+          sudo -E apt-mark hold grub-efi-amd64-signed
+          sudo -E apt update
+          sudo -E apt -y full-upgrade
+          sudo apt install -y ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pip libpython3-dev qemu-utils clang g++ python3-distutils rsync unzip zlib1g-dev wget
+          sudo -E systemctl daemon-reload 
+          sudo -E apt -y autoremove --purge
+          sudo -E apt clean
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+      - name: 下载prepare_WORKSPACE
+        uses: actions/download-artifact@v3
+        with:
+          name: prepare_WORKSPACE
+          
+      - name: 解压
+        run:  |
+          sudo mv $GITHUB_WORKSPACE/prepare_WORKSPACE.tgz /prepare_WORKSPACE.tgz 
+          tar xvpfz /prepare_WORKSPACE.tgz  -C $GITHUB_WORKSPACE
+          sudo rm -rf /prepare_WORKSPACE.tgz
+          cat prepare_ENV
+          cat prepare_ENV >> $GITHUB_ENV
+
+      - name: 加载自定义配置并生成配置文件
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
           echo CONFIG_PACKAGE_${{ matrix.pakcages }}=m > .config
           cat ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package/.config/${{ matrix.pakcages }} >> $OPENWRT_ROOT_PATH/.config && echo load extra configuration || echo No extra configuration loaded
           make defconfig
@@ -279,7 +328,7 @@ jobs:
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: |
           mkdir -p ./artifact
-          cp -rf $(find ./bin/packages/ -type f -name "${{ matrix.pakcages }}*.ipk") ./artifact || cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact 
+          cp -rf $(find ./bin/packages/ -type f -name "${{ matrix.pakcages }}*.ipk") ./artifact || cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact || cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact || exit 0
 
       - name: 上传build artifacts
         uses: actions/upload-artifact@v2
