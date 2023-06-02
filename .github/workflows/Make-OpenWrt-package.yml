@@ -105,8 +105,8 @@ jobs:
           rm -rf luci-app-diskman/.git
           git clone https://github.com/sirpdboy/NetSpeedTest
           rm -rf NetSpeedTest/.git
-          git clone https://github.com/tty228/luci-app-serverchan
-          rm -rf luci-app-serverchan/.git
+          git clone https://github.com/tty228/luci-app-wechatpush
+          rm -rf luci-app-wechatpush/.git
           git clone https://github.com/jerrykuku/luci-theme-argon
           rm -rf luci-theme-argon/.git
           git clone https://github.com/fullcone-nat-nftables/nft-fullcone
@@ -150,7 +150,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-diskman $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/luci-app-netspeedtest $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/homebox $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-serverchan $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-wechatpush $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-theme-argon $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/nft-fullcone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
@@ -217,7 +217,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,homebox,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-serverchan,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,turboacc,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,homebox,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,turboacc,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
     steps:
       - name: 清理空间
         run:  |
