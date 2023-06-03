@@ -241,7 +241,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: ${{ env.OPENWRT_ROOT_PATH }}/package/chenmozhijin-package
-
+          
+      - name: 更新 feeds 
+        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          
       - name: 加载自定义配置并生成配置文件
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: |
@@ -252,12 +258,6 @@ jobs:
           echo CONFIG_PACKAGE_golang=m > .config
           make defconfig
           ./scripts/diffconfig.sh
-
-      - name: 更新 feeds 
-        working-directory: ${{ env.OPENWRT_ROOT_PATH }}
-        run: |
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
 
       - name: 编译依赖
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
