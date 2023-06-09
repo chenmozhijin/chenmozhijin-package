@@ -160,7 +160,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-socat/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/r8152 $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/package_kernel_r8125/* $CMZJ_PACKAGE_ROOT_PATH/r8125
+          cp -r $DOWNLOAD_ROOT_PATH/other/package_kernel_r8125/* $CMZJ_PACKAGE_ROOT_PATH/r8125
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
