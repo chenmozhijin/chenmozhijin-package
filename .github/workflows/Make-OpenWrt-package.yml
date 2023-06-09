@@ -54,7 +54,7 @@ jobs:
           cd cmzj_package
           export CMZJ_PACKAGE_ROOT_PATH="$(pwd)"
           echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
-          mkdir -p Parted
+          mkdir -p r8125
           cd $GITHUB_WORKSPACE
 
       - name: 将存储库签出到运行器
