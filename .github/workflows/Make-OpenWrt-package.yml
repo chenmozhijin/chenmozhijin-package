@@ -100,8 +100,10 @@ jobs:
           rm -rf luci-app-adguardhome/.git
           git clone https://github.com/jerrykuku/luci-app-argon-config
           rm -rf luci-app-argon-config/.git
-          #git clone https://github.com/csrutil/OpenWrt-NIC-Drivers
-          #rm -rf OpenWrt-NIC-Drivers/.git
+          git clone https://github.com/csrutil/OpenWrt-NIC-Drivers
+          rm -rf OpenWrt-NIC-Drivers/.git
+          https://github.com/sbwml/package_kernel_r8125
+          rm -rf package_kernel_r8125/.git
           git clone https://github.com/lisaac/luci-app-diskman
           rm -rf luci-app-diskman/.git
           git clone https://github.com/sirpdboy/NetSpeedTest
@@ -135,8 +137,6 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ipv6-helper $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_aliyun $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/ddns-scripts_dnspod $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8125 $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8152 $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/r8168 $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/shortcut-fe $CMZJ_PACKAGE_ROOT_PATH/
           #cp -r $DOWNLOAD_ROOT_PATH/immortalwrt/luci/applications/luci-app-syncdial $CMZJ_PACKAGE_ROOT_PATH/
@@ -159,6 +159,8 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/nft-fullcone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-socat/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/r8152 $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/lede/lede/package/lean/package_kernel_r8125/* $CMZJ_PACKAGE_ROOT_PATH/r8125
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
