@@ -102,7 +102,7 @@ jobs:
           rm -rf luci-app-argon-config/.git
           git clone https://github.com/csrutil/OpenWrt-NIC-Drivers
           rm -rf OpenWrt-NIC-Drivers/.git
-          https://github.com/sbwml/package_kernel_r8125
+          git clone https://github.com/sbwml/package_kernel_r8125
           rm -rf package_kernel_r8125/.git
           git clone https://github.com/lisaac/luci-app-diskman
           rm -rf luci-app-diskman/.git
