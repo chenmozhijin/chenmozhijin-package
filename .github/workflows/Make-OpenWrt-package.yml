@@ -289,7 +289,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
     steps:
       - name: 安装编译依赖
         run: |
