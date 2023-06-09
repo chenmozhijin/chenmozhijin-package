@@ -54,7 +54,7 @@ jobs:
           cd cmzj_package
           export CMZJ_PACKAGE_ROOT_PATH="$(pwd)"
           echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
-          mkdir -p Parted
+          mkdir -p r8125
           cd $GITHUB_WORKSPACE
 
       - name: 将存储库签出到运行器
@@ -102,6 +102,8 @@ jobs:
           rm -rf luci-app-argon-config/.git
           git clone https://github.com/csrutil/OpenWrt-NIC-Drivers
           rm -rf OpenWrt-NIC-Drivers/.git
+          git clone https://github.com/sbwml/package_kernel_r8125
+          rm -rf package_kernel_r8125/.git
           git clone https://github.com/lisaac/luci-app-diskman
           rm -rf luci-app-diskman/.git
           git clone https://github.com/sirpdboy/NetSpeedTest
@@ -147,7 +149,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/passwall/openwrt-passwall2/luci-app-passwall2 $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-adguardhome $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-argon-config $CMZJ_PACKAGE_ROOT_PATH/
-          cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/* $CMZJ_PACKAGE_ROOT_PATH/
+          #cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/* $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-diskman/applications/luci-app-diskman $CMZJ_PACKAGE_ROOT_PATH/
           cp $DOWNLOAD_ROOT_PATH/other/luci-app-diskman/Parted.Makefile $CMZJ_PACKAGE_ROOT_PATH/luci-app-diskman/
           cp -r $DOWNLOAD_ROOT_PATH/other/NetSpeedTest/luci-app-netspeedtest $CMZJ_PACKAGE_ROOT_PATH/
@@ -157,6 +159,8 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/nft-fullcone $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/turboacc/luci-app-turboacc $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-socat/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/r8152 $CMZJ_PACKAGE_ROOT_PATH/
+          cp -r $DOWNLOAD_ROOT_PATH/other/package_kernel_r8125/* $CMZJ_PACKAGE_ROOT_PATH/r8125
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
@@ -228,7 +232,7 @@ jobs:
 
       - name: 下载SDK
         run: |
-          url=https://downloads.openwrt.org/releases/22.03.5/targets/x86/64/openwrt-sdk-22.03.5-x86-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz
+          url=https://downloads.openwrt.org/releases/23.05.0-rc1/targets/x86/64/openwrt-sdk-23.05.0-rc1-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
           wget -O openwrt.tar.xz $url
           tar xvf openwrt.tar.xz
           mv $(basename $url | awk -F '.tar.xz' '{ print $1 }') openwrt
@@ -285,7 +289,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,kmod-igb-intel,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
     steps:
       - name: 安装编译依赖
         run: |
