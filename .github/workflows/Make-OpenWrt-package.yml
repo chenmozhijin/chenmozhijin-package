@@ -118,6 +118,8 @@ jobs:
           rm -rf turboacc/.git
           git clone https://github.com/chenmozhijin/luci-app-socat
           rm -rf luci-app-socat/.git
+          git clone https://github.com/vernesong/OpenClash
+          rm -rf OpenClash/.git
           
       - name: 复制到cmzj_package
         run: |
@@ -161,6 +163,7 @@ jobs:
           cp -r $DOWNLOAD_ROOT_PATH/other/luci-app-socat/luci-app-socat $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/OpenWrt-NIC-Drivers/drivers/r8152 $CMZJ_PACKAGE_ROOT_PATH/
           cp -r $DOWNLOAD_ROOT_PATH/other/package_kernel_r8125/* $CMZJ_PACKAGE_ROOT_PATH/r8125
+          cp -r $DOWNLOAD_ROOT_PATH/other/OpenClash/luci-app-openclash $CMZJ_PACKAGE_ROOT_PATH/
           cd $CMZJ_PACKAGE_ROOT_PATH && ls
           
       - name: 修改Makefile文件
@@ -214,6 +217,7 @@ jobs:
           git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)" && git push &&  echo "compile=true" >> "$GITHUB_OUTPUT" ||echo "compile=false" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
           echo pakcages=[$(ls | sed '/README.md/d' |sed ":a;N;s/\n/,/g;ba")] >> "$GITHUB_OUTPUT"
+          
   prepare:
     needs: Make
     if:  needs.Make.outputs.compile == 'true' ||  inputs.compile
@@ -289,7 +293,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
+        pakcages: [baidupcs-web,brook,chinadns-ng,ddns-scripts_aliyun,ddns-scripts_dnspod,dns2socks,dns2tcp,gn,hysteria,ipt2socks,ipv6-helper,luci-app-adguardhome,luci-app-argon-config,luci-app-baidupcs-web,luci-app-cifs-mount,luci-app-diskman,luci-app-fileassistant,luci-app-netdata,luci-app-netspeedtest,luci-app-openclash,luci-app-passwall,luci-app-passwall2,luci-app-qbittorrent,luci-app-rclone,luci-app-wechatpush,luci-app-socat,luci-app-turboacc,luci-app-usb-printer,luci-app-vlmcsd,luci-app-webadmin,luci-app-zerotier,luci-theme-argon,microsocks,naiveproxy,nft-fullcone,pdnsd-alt,qBittorrent,qBittorrent-static,qtbase,qttools,r8125,r8152,r8168,rblibtorrent,shadowsocks-rust,shadowsocksr-libev,simple-obfs,sing-box,ssocks,tcping,trojan,trojan-go,trojan-plus,v2ray-core,v2ray-geodata,v2ray-plugin,vlmcsd,xray-core,xray-plugin]
     steps:
       - name: 安装编译依赖
         run: |
