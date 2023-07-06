@@ -167,16 +167,8 @@ jobs:
       - name: 修改Makefile文件
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
         run: |
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-vlmcsd/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-webadmin/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-zerotier/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-cifs-mount/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-baidupcs-web/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-rclone/Makefile
-          #sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-syncdial/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-usb-printer/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-qbittorrent/Makefile
-          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./luci-app-netdata/Makefile
+          sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' ./*/Makefile
+
           
       - name: 创建软连接以修复中文支持
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
@@ -189,12 +181,6 @@ jobs:
           rm -rf ./luci-app-netspeedtest/po/zh_Hans
           ln -s zh-cn ./luci-app-netspeedtest/po/zh_Hans
           
-#      - name: 修改luci-app-netdata
-#        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
-#        run: |
-#          sed -i 's/setting")/netdata")/' ./luci-app-netdata/luasrc/controller/netdata.lua
-#          sed -i 's/("Base Setting"), 20/("Base Setting"), 30/' ./luci-app-netdata/luasrc/controller/netdata.lua
-#          sed -i 's/("NetData"), 30/("NetData"), 20/' ./luci-app-netdata/luasrc/controller/netdata.lua
           
       - name: 删除.md .github
         working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
